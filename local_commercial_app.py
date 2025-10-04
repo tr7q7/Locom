@@ -37,11 +37,12 @@ prix_bien = st.slider("Prix du local", 30000, 1000000, step=10000, value=250000,
 travaux = st.slider("Montant des travaux", 0, 300000, step=5000, value=50000, format="€%d")
 loyer = st.slider("Loyer mensuel HT", 500, 10000, step=100, value=2500, format="€%d")
 taxe_fonciere = st.slider("Taxe foncière annuelle", 500, 10000, step=100, value=1500, format="€%d")
-charges = st.slider("Charges annuelles (assurance, entretien...)", 0, 10000, step=100, value=2000, format="€%d")
+assurance_mensuelle = st.slider("Assurance mensuelle", 0, 300, step=10, value=50, format="€%d")
+charges_communes_mensuelles = st.slider("Charges communes mensuelles", 0, 1000, step=10, value=120, format="€%d")
 taux_credit = st.slider("Taux du crédit", 0.0, 5.0, step=0.1, value=2.0, format="%.2f %%")
 duree_credit = st.slider("Durée du crédit", 10, 30, step=1, value=20, format="%d ans")
 
-st.markdown("#### 📉 Calculs")
+st.markdown("#### 🔢 Calculs")
 
 if st.button("Calculer"):
     duree_credit_mois = duree_credit * 12
@@ -55,6 +56,10 @@ if st.button("Calculer"):
         mensualite = montant_emprunte / duree_credit_mois
 
     loyer_annuel = loyer * 12
+    assurance_annuelle = assurance_mensuelle * 12
+    charges_communes_annuelles = charges_communes_mensuelles * 12
+    charges_annuelles_totales = assurance_annuelle + charges_communes_annuelles
+
     interets_annuels = montant_emprunte * taux_credit / 100
     amort_bien = prix_bien / 25
     amort_travaux = travaux / 10
@@ -62,7 +67,7 @@ if st.button("Calculer"):
 
     dotation = amort_bien + amort_travaux + amort_notaire
 
-    resultat_comptable = loyer_annuel - taxe_fonciere - charges - interets_annuels - dotation
+    resultat_comptable = loyer_annuel - taxe_fonciere - charges_annuelles_totales - interets_annuels - dotation
 
     if resultat_comptable <= 42500:
         impot = max(resultat_comptable * 0.15, 0)
@@ -70,15 +75,18 @@ if st.button("Calculer"):
         impot = 42500 * 0.15 + (resultat_comptable - 42500) * 0.25
 
     credit_annuel = mensualite * 12
-    cashflow = loyer_annuel - taxe_fonciere - charges - credit_annuel - impot
-    rendement = (cashflow / montant_emprunte) * 100
+    cashflow_annuel = loyer_annuel - taxe_fonciere - charges_annuelles_totales - credit_annuel - impot
+    cashflow_mensuel = cashflow_annuel / 12
+    rendement = (cashflow_annuel / montant_emprunte) * 100
 
-    st.markdown(f"### 💶 Cashflow mensuel : <span style='color:lime'>{cashflow / 12:.2f} €</span>", unsafe_allow_html=True)
+    st.markdown(f"### 💶 Cashflow mensuel : <span style='color:lime'>{cashflow_mensuel:.2f} €</span>", unsafe_allow_html=True)
     st.markdown(f"### 📈 Rendement : <span style='color:violet'>{rendement:.2f} %</span>", unsafe_allow_html=True)
 
     with st.expander("Voir les détails"):
         st.write(f"Loyer annuel : {loyer_annuel} €")
-        st.write(f"Charges totales : {charges + taxe_fonciere} €")
+        st.write(f"Assurance annuelle : {assurance_annuelle} €")
+        st.write(f"Charges communes annuelles : {charges_communes_annuelles} €")
+        st.write(f"Charges totales : {charges_annuelles_totales} €")
         st.write(f"Intérêts annuels : {interets_annuels:.0f} €")
         st.write(f"Amortissements : {dotation:.0f} €")
         st.write(f"Impôt sur les sociétés : {impot:.0f} €")
