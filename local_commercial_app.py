@@ -41,7 +41,7 @@ charges = st.slider("Charges annuelles (assurance, entretien...)", 0, 10000, ste
 taux_credit = st.slider("Taux du crédit", 0.0, 5.0, step=0.1, value=2.0, format="%.2f %%")
 duree_credit = st.slider("Durée du crédit", 10, 30, step=1, value=20, format="%d ans")
 
-st.markdown("#### 🔢 Calculs")
+st.markdown("#### 📉 Calculs")
 
 if st.button("Calculer"):
     duree_credit_mois = duree_credit * 12
@@ -73,7 +73,7 @@ if st.button("Calculer"):
     cashflow = loyer_annuel - taxe_fonciere - charges - credit_annuel - impot
     rendement = (cashflow / montant_emprunte) * 100
 
-    st.markdown(f"### 💶 Cashflow annuel : <span style='color:lime'>{cashflow:.2f} €</span>", unsafe_allow_html=True)
+    st.markdown(f"### 💶 Cashflow mensuel : <span style='color:lime'>{cashflow / 12:.2f} €</span>", unsafe_allow_html=True)
     st.markdown(f"### 📈 Rendement : <span style='color:violet'>{rendement:.2f} %</span>", unsafe_allow_html=True)
 
     with st.expander("Voir les détails"):
