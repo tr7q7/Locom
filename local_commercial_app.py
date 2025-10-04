@@ -33,39 +33,13 @@ st.title("CF Local Commercial (SCI à l'IS)")
 
 st.markdown("#### 🔕 Informations générales")
 
-def slider_input(label, min_value, max_value, step, default, format_str):
-    col1, col2 = st.columns([3, 1])
-    if f"value_{label}" not in st.session_state:
-        st.session_state[f"value_{label}"] = default
-
-    with col1:
-        slider_val = st.slider(
-            label, min_value, max_value, step=step,
-            value=st.session_state[f"value_{label}"], format=format_str,
-            key=f"slider_{label}"
-        )
-    with col2:
-        input_val = st.number_input(
-            " ", min_value=min_value, max_value=max_value,
-            value=st.session_state[f"value_{label}"], step=step,
-            label_visibility="collapsed", key=f"input_{label}"
-        )
-
-    # synchronisation des deux widgets
-    if slider_val != st.session_state[f"value_{label}"]:
-        st.session_state[f"value_{label}"] = slider_val
-    elif input_val != st.session_state[f"value_{label}"]:
-        st.session_state[f"value_{label}"] = input_val
-
-    return st.session_state[f"value_{label}"]
-
-prix_bien = slider_input("Prix du local", 30000, 1000000, 10000, 250000, "€%d")
-travaux = slider_input("Montant des travaux", 0, 300000, 5000, 50000, "€%d")
-loyer = slider_input("Loyer mensuel HT", 500, 10000, 100, 2500, "€%d")
-taxe_fonciere = slider_input("Taxe foncière annuelle", 500, 10000, 100, 1500, "€%d")
-charges = slider_input("Charges annuelles (assurance, entretien...)", 0, 10000, 100, 2000, "€%d")
-taux_credit = slider_input("Taux du crédit", 0.0, 5.0, 0.1, 2.0, "%.2f %%")
-duree_credit = slider_input("Durée du crédit", 10, 30, 1, 20, "%d ans")
+prix_bien = st.slider("Prix du local", 30000, 1000000, step=10000, value=250000, format="€%d")
+travaux = st.slider("Montant des travaux", 0, 300000, step=5000, value=50000, format="€%d")
+loyer = st.slider("Loyer mensuel HT", 500, 10000, step=100, value=2500, format="€%d")
+taxe_fonciere = st.slider("Taxe foncière annuelle", 500, 10000, step=100, value=1500, format="€%d")
+charges = st.slider("Charges annuelles (assurance, entretien...)", 0, 10000, step=100, value=2000, format="€%d")
+taux_credit = st.slider("Taux du crédit", 0.0, 5.0, step=0.1, value=2.0, format="%.2f %%")
+duree_credit = st.slider("Durée du crédit", 10, 30, step=1, value=20, format="%d ans")
 
 st.markdown("#### 🔢 Calculs")
 
